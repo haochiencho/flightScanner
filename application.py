@@ -8,6 +8,13 @@ def add_flight():
     # TODO: update database with flight information
     # username in URL and remaining info in POST request
     username = request.form['username']
+    price = request.form['price']
+    starting_airport = request.form['starting_airport']
+    destination_airport = request.form['destination_airport']
+    departure_date = request.form['departure_date']
+    arrival_date = request.form['arrival_date']
+    num_passengers = request.form['num_passengers']
+    ticket_type = request.form['ticket_type']
 
     return get_dashboard(username)
 
@@ -26,6 +33,12 @@ def get_dashboard(username):
 def test_client():
     return render_template('test_client.html')
 
+
+@app.route('/sign_up')
+def sign_up():
+    return None
+
 @app.route('/')
 def index():
     return render_template('homepage.html')
+
