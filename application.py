@@ -2,21 +2,41 @@ from flask import Flask
 from flask import render_template
 from flask import request
 app = Flask(__name__)
+from firebase import firebase
 
 @app.route('/add_flight', methods=['POST'])
 def add_flight():
+    fire_base = firebase.FirebaseApplication('https://flightscanner-baa11.firebaseio.com', authentication=None)
     # TODO: update database with flight information
     # username in URL and remaining info in POST request
     username = request.form['username']
+
+    user_data = add_flight_departure_destination(username, fire_base)
+    fire_base.put('/users', username, user_data)
+
+    return get_dashboard(username)
+
+def add_flight_departure_destination(username, fire_base):
     price = request.form['price']
     starting_airport = request.form['starting_airport']
     destination_airport = request.form['destination_airport']
     departure_date = request.form['departure_date']
     arrival_date = request.form['arrival_date']
-    num_passengers = request.form['num_passengers']
+    num_passenger = request.form['num_passengers']
     ticket_type = request.form['ticket_type']
 
-    return get_dashboard(username)
+    user_data = fire_base.get('/users', username)
+
+    user_data['local_dest'][starting_airport + '-' + destination_airport] = {
+            'num_passenger' : num_passenger,
+            'departure_date' : departure_date,
+            'arrival_date' : arrival_date,
+            'ticket_type' : ticket_type,
+            'price' : price
+        }
+
+    return user_data
+
 
 def check_flights_for_all_users():
     # TODO: pull all users from DB and check flight for each destination
