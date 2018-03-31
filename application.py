@@ -25,3 +25,7 @@ def get_dashboard(username):
 @app.route('/test_client')
 def test_client():
     return render_template('test_client.html')
+
+@app.route('/')
+def index():
+    return render_template('homepage.html')
