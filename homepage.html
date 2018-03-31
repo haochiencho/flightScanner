@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #map {
+        width: 100%;
+        /* height: 625px;
+        background-color: grey; */
+      }
+      html, body {
+        height: 100%;
+        margin: 20;
+        padding: 10;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Where do you want to go?</h3>
+    <!-- sign in page -->
+    <div>
+      <form action="/sign_up" method="POST" id="myForm">
+
+      <h2>Sign Up</h2>
+      <p>Required fields are followed by <strong><abbr title="required">*</abbr></strong>.</p>
+
+        <label for="myName">What's your name? <abbr title="required">*</abbr></label>
+        <input id="myName" type="text" name="name" value="Shannon" pattern="[A-Za-z].{3,}"
+               title="Name must contain only uppercase or lowercase letters and at least 3 or more characters">
+        <br>
+
+        <label for="myUsername">Username: <abbr title="required">*</abbr></label>
+        <input id="myUsername" type="text" name="username" value="Ziyande"
+               pattern=".{6,}"
+               title="Username must be at least 6 or more characters">
+        <br>
+
+        <label for="myPassword">Password: <abbr title="required">*</abbr></label>
+        <input id="myPassword" type="password" name="password" value="password"
+               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+               title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+        <br>
+
+        <label for="myNumber">Phone Number: <abbr title="required">*</abbr></label>
+        <input id="myNumber" type="tel" name="number" value="9515555555"
+               pattern='[\+]\d{1}[\(]\d{3}[\)]\d{3}[\-]\d{4}' title='Phone Number (Format: +1(951)555-5555)'>
+        <br>
+
+        <input type="submit" value="Enter">
+
+      </form>
+    </div>
+
+  </body>
+</html>
