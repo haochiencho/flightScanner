@@ -53,6 +53,7 @@ def get_dashboard(username):
 def test_client():
     return render_template('test_client.html')
 
+
 @app.route('/sign_up')
 def sign_up():
     return None
@@ -60,3 +61,4 @@ def sign_up():
 @app.route('/')
 def index():
     return render_template('homepage.html')
+
