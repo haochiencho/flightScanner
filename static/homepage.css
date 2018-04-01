@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Oswald:400);
+
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
 #map {
@@ -78,4 +80,43 @@ html, body {
 }
 #target {
   width: 345px;
+}
+
+
+body {
+  background: #444;
+	font-size: 1em;
+	font-family: 'Oswald', 'Helvetica Neue', Helvetica;
+	line-height: 1.4;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  background: #f2f2f2;
+}
+
+h1 { font-size: 60px; }
+h3 {
+  font-size: 32px;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+h6 { font-size: 22px; }
+
+.banner h1, .banner h3, .banner h6 {
+  margin: 0;
+  text-shadow: 2px 2px 6px #000;
+  text-align: center;
+}
+
+.banner {
+  color: white;
+  background: url('https://upload.wikimedia.org/wikipedia/commons/7/7d/Italy_banner_3_Florence.jpg') top left/cover no-repeat;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -5,7 +5,7 @@ function initAutocomplete() {
 
     var map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 0, lng: 0},
-        zoom: 1,
+        zoom: 2,
         mapTypeId: 'roadmap'
     });
     console.log("map zoom: ", map.zoom)
