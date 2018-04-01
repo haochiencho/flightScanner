@@ -1,6 +1,4 @@
-from flask import Flask
-from flask import render_template
-from flask import request
+from flask import Flask, render_template, request, abort
 from twilio.rest import Client
 import string
 from pyflights import PyFlight
@@ -19,6 +17,20 @@ TWILIO_SID = "ACb1491559fcc64c8db360351aa03c5358"
 TWILIO_AUTH = "4c326f27de0da951199d6c74df72263e"
 TWILIO_NUM = "16614909538"
 airlines = ['united', 'delta', 'southwest', 'alaskaAirline']
+
+print("Opening file . . .")
+
+codeToAirport = {}
+file = open("airlines.dat", 'r')
+for line in file:
+    line = line.replace('"', '')
+    args = line.split(',')
+    if len(args[4]) != 3:
+        continue
+    codeToAirport[args[4]] = args[1]
+
+file.close()
+print("All airlines loaded")
 
 @app.route('/add_flight', methods=['POST'])
 def add_flight():
@@ -112,11 +124,29 @@ def get_flight_info(departure, destination, departure_date, arrival_date):
 
     return price, airline
 
+@app.route("/dash/<username>")
+def dash(username=None):
+    return get_dashboard(username)
 
 def get_dashboard(username):
     # TODO: look up destinations in DB and display to user
-
-    return render_template('dashboard.html', name=username)
+    users_data = fire_base.get('/users', None)
+    if users_data != None and username in users_data:
+        user = users_data[username]
+        flights = []
+        print(user)
+        if 'local_dest' not in user:
+            return render_template('dashboard.html')
+        for key in user['local_dest']:
+            flight = user['local_dest'][key]
+            departure, destination = key.split('-')
+            flight['departure'] = departure
+            flight['destination'] = destination
+            flights.append(flight)
+    else:
+        print("Error: User not found")
+        abort(500)
+    return render_template('dashboard.html', flights=flights, username=username)
 
 @app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
@@ -125,13 +155,22 @@ def sign_up():
     username = request.form['username']
     password = request.form['password']
     phone_number = request.form['phone_number']
-    # TODO: check phone number here
+    phone_number = format_phone(phone_number)
 
     user_data = {'local_dest' : {}, 'origin' : 'LAX', 'phone_number' : phone_number}
-
+    print(user_data)
     fire_base.put('/users', username, user_data)
-    return "<h1>success</h1>"
-    # TODO: Redirect to dashboard after signing up
+    return get_dashboard(username)
+
+def format_phone(phone_number):
+    phone_number = phone_number.replace('-', "").replace(' ', "").replace('(', "").replace(')', "")
+    for c in phone_number:
+        if not c.isdigit():
+            abort(400) # Abort with bad request error cod
+    if len(phone_number) != 10:
+        abort(400)
+    phone_number = '+1' + phone_number
+    return phone_number
 
 @app.route('/')
 def index():

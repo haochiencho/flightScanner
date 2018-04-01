@@ -1,3 +1,136 @@
-<!doctype html>
-<title>Hello from Flask</title>
-  <h1>Hello {{ name }}!</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="../static/dashboard.css">
+    <link rel="stylesheet" href="../static/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="../static/jquery/jquery-3.3.1.min.js"></script>
+    <script src="../static/dashboard.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWB23oSRi7rHMDDypWUjxJCCl4WLiZOyo&libraries=places&callback=initAutocomplete" async defer></script>
+  </head>
+  <body>
+  <aside>
+    <nav class="rad-sidebar">
+      <ul>
+        <li>
+          <a href="#" class="inbox">
+            <i class="fa fa-dashboard"><span class="icon-bg rad-bg-success"></span></i>
+            <span class="rad-sidebar-item">Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-bar-chart-o">
+              <span class="icon-bg rad-bg-danger"></span>
+            </i>
+            <span class="rad-sidebar-item">Ticket status</span>
+          </a>
+        </li>
+        <li><a href="#" class="snooz"><i class="fa fa-line-chart"><span class="icon-bg rad-bg-primary"></span></i><span class="rad-sidebar-item">Call trends</span></a></li>
+        <li><a href="#" class="done"><i class="fa fa-area-chart"><span class="icon-bg rad-bg-warning"></span></i><span class="rad-sidebar-item">Heat maps</span></a></li>
+        <li><a href="#"><i class="fa fa-wrench"><span class="icon-bg rad-bg-violet"></span></i><span class="rad-sidebar-item">Settings</span></a></li>
+      </ul>
+    </nav>
+  </aside>
+  <main>
+    <section>
+      <div class="rad-body-wrapper">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Your Dream Destinations</h3>
+
+                </div>
+
+                <div class="panel-body">
+                  <table id="customers">
+                    <tr>
+                      <th>Departure</th>
+                      <th>Destination</th>
+                      <th>Departure Date</th>
+                      <th>Return Date</th>
+                      <th># Passengers</th>
+                      <th>Max Price</th>
+                      <th>Ticket Type</th>
+                    </tr>
+                    {% for flight in flights%}
+                    <tr>
+                      <td>{{flight["departure"]}}</td>
+                      <td>{{flight["destination"]}}</td>
+                      <td>{{flight["departure_date"]}}</td>
+                      <td>{{flight["arrival_date"]}}</td>
+                      <td>{{flight["num_passenger"]}}</td>
+                      <td>{{flight["price"]}}</td>
+                      <td>{{flight["ticket_type"]}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                      <form action="/add_flight" method="POST">
+                      <input name="username" type="text" hidden value="{{ username }}">
+                      <td><input name="starting_airport" type="text"></td>
+                      <td><input name="destination_airport" type="text"></td>
+                      <td><input name="departure_date" type="text"></td>
+                      <td><input name="arrival_date" type="text"></td>
+                      <td><input name="num_passengers" type="text"></td>
+                      <td><input name="price" type="text"></td>
+                      <td><select name="ticket_type">
+                            <option value="economy">Economy</option>
+                            <option value="business">Business</option>
+                            <option value="firstclass">First Class</option>
+                          </select>
+                          <button class="btn btn-link" type="submit" id="submitNewDestination"><i class="fa fa-plane" style="font-size:26px;"></i></button>
+                      </td>
+                    </form>
+                    </tr>
+                  </table>
+                  <input id="pac-input" class="controls" type="text" placeholder="Where do you want to go?">
+                  <div id="map"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-4 col-md-12 col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Area Chart</h3>
+                </div>
+                <div class="panel-body">
+                  <div id="areaChart" class="rad-chart"></div>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Line Chart</h3>
+                </div>
+                <div class="panel-body">
+                  <div id="lineChart" class="rad-chart"></div>
+                </div>
+
+              </div>
+            </div>
+            <!-- here-->
+            <div class="col-lg-4 col-md-6 col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Donut Chart</h3>
+                </div>
+                <div class="panel-body">
+                  <div id="donutChart" class="rad-chart"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    
+  </body>
+</html>
