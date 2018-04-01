@@ -68,19 +68,22 @@
                     </tr>
                     {% endfor %}
                     <tr>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><input type="text"></td>
-                      <td><select name="cars">
+                      <form action="/add_flight" method="POST">
+                      <input name="username" type="text" hidden value="{{ username }}">
+                      <td><input name="starting_airport" type="text"></td>
+                      <td><input name="destination_airport" type="text"></td>
+                      <td><input name="departure_date" type="text"></td>
+                      <td><input name="arrival_date" type="text"></td>
+                      <td><input name="num_passengers" type="text"></td>
+                      <td><input name="price" type="text"></td>
+                      <td><select name="ticket_type">
                             <option value="economy">Economy</option>
                             <option value="business">Business</option>
                             <option value="firstclass">First Class</option>
                           </select>
-                          <a id="submitNewDestination"><i class="fa fa-plane" style="font-size:26px;"></i></a>
+                          <button class="btn btn-link" type="submit" id="submitNewDestination"><i class="fa fa-plane" style="font-size:26px;"></i></button>
                       </td>
+                    </form>
                     </tr>
                   </table>
                   <input id="pac-input" class="controls" type="text" placeholder="Where do you want to go?">
