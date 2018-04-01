@@ -248,6 +248,7 @@ html, body {
 }
 
 #submitNewDestination{
+  float: right;
   cursor: pointer;
   padding: auto;
 }
