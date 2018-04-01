@@ -11,6 +11,20 @@ TWILIO_SID = "ACb1491559fcc64c8db360351aa03c5358"
 TWILIO_AUTH = "4c326f27de0da951199d6c74df72263e"
 TWILIO_NUM = "16614909538"
 
+print("Opening file . . .")
+
+codeToAirport = {}
+file = open("airlines.dat", 'r')
+for line in file:
+    line = line.replace('"', '')
+    args = line.split(',')
+    if len(args[4]) != 3:
+        continue
+    codeToAirport[args[4]] = args[1]
+
+file.close()
+print("All airlines loaded")
+
 @app.route('/add_flight', methods=['POST'])
 def add_flight():
     username = request.form['username']
