@@ -246,3 +246,8 @@ html, body {
     background-color: #4C4C66;
     color: white;
 }
+
+#submitNewDestination{
+  cursor: pointer;
+  padding: auto;
+}
