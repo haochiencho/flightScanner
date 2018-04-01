@@ -1,10 +1,17 @@
 from flask import Flask
 from flask import render_template
 from flask import request
+from twilio.rest import Client
+
 app = Flask(__name__)
+
 from firebase import firebase
 
 fire_base = firebase.FirebaseApplication('https://flightscanner-baa11.firebaseio.com', authentication=None)
+
+TWILIO_SID = "ACb1491559fcc64c8db360351aa03c5358"
+TWILIO_AUTH = "4c326f27de0da951199d6c74df72263e"
+TWILIO_NUM = "+16614909538"
 
 @app.route('/add_flight', methods=['POST'])
 def add_flight():
@@ -74,3 +81,10 @@ def sign_up():
 def index():
     return render_template('homepage.html')
 
+def send_text(dest, message):
+    client = Client(TWILIO_SID, TWILIO_AUTH)
+
+    message = client.messages.create(
+        to=dest,
+        from_=TWILIO_NUM,
+        body=message)
