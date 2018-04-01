@@ -1,9 +1,17 @@
 from flask import Flask
 from flask import render_template
 from flask import request
+from twilio.rest import Client
+import string
+
 app = Flask(__name__)
+
 from firebase import firebase
 fire_base = firebase.FirebaseApplication('https://flightscanner-baa11.firebaseio.com', authentication=None)
+
+TWILIO_SID = "ACb1491559fcc64c8db360351aa03c5358"
+TWILIO_AUTH = "4c326f27de0da951199d6c74df72263e"
+TWILIO_NUM = "16614909538"
 
 @app.route('/add_flight', methods=['POST'])
 def add_flight():
@@ -44,12 +52,39 @@ def check_flights_for_all_users():
     # store flight info in DB
 
     users_data = fire_base.get('/users', None)
-    print(users_data)
     if users_data != None:
         for username in users_data:
             user_data = users_data[username]
+            for location_destination in user_data['local_dest']:
+                user_flight_info = user_data['local_dest'][location_destination]
+
+                departing_airport, destination_airport = parse_location_destination(location_destination)
+
+                price, airline = get_flight_info(departing_airport, destination_airport,\
+                user_flight_info['arrival_date'], user_flight_info['departure_date'])
+
+                price = round(price * float(user_flight_info['num_passenger']), 2)
+
+                sms_message = "Found flight from " + departing_airport + " to " + destination_airport \
+                    + " at $" + str(price) + " for " + user_flight_info['num_passenger'] + " passengers! " \
+                    + "Please book tickets on www." + str.lower(airline) + ".com"
+
+                # user_phone_number = user_data['phone_number']
+                send_text('+19516607238', sms_message)
+
 
     return render_template('homepage.html')
+
+def parse_location_destination(location_destination):
+    location_arr = location_destination.split('-')
+    return location_arr[0], location_arr[1]
+
+def get_flight_info(departure, destination, departure_date, arrival_date):
+    # lowest price
+    price = 4.00
+    airline = "United"
+    return price, airline
+
 
 def get_dashboard(username):
     # TODO: look up destinations in DB and display to user
@@ -60,6 +95,31 @@ def get_dashboard(username):
 def add_flight_test_client():
     return render_template('test_client.html')
 
+@app.route('/sign_up', methods=['GET', 'POST'])
+def sign_up():
+    if request.method == "GET":
+        return render_template("test_signup.html")
+    username = request.form['username']
+    password = request.form['password']
+    email = request.form['email']
+    phone_number = request.form['phone_number']
+
+    # TODO: check phone number here
+
+    user_data = {'local_dest' : {}, 'origin' : 'LAX', 'phone_number' : phone_number}
+
+    fire_base.put('/users', username, user_data)
+    return "<h1>success</h1>"
+    # TODO: Redirect to dashboard after signing up
+
 @app.route('/')
 def index():
     return render_template('homepage.html')
+
+def send_text(dest, message):
+    client = Client(TWILIO_SID, TWILIO_AUTH)
+
+    message = client.messages.create(
+        to=dest,
+        from_=TWILIO_NUM,
+        body=message)
