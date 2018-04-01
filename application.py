@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, abort
 from twilio.rest import Client
 import string
 import urllib
-from bs4 import BeautifulSoup
 from random import *
 import json
 import requests
