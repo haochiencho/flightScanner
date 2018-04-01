@@ -135,7 +135,7 @@ def get_dashboard(username):
         flights = []
         print(user)
         if 'local_dest' not in user:
-            return render_template('dashboard.html')
+            return render_template('dashboard.html', username=username)
         for key in user['local_dest']:
             flight = user['local_dest'][key]
             departure, destination = key.split('-')
