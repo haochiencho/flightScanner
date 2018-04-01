@@ -3,6 +3,12 @@ from flask import render_template
 from flask import request
 from twilio.rest import Client
 import string
+from pyflights import PyFlight
+import urllib
+from bs4 import BeautifulSoup
+from random import *
+import json
+import requests
 
 app = Flask(__name__)
 
@@ -12,6 +18,7 @@ fire_base = firebase.FirebaseApplication('https://flightscanner-baa11.firebaseio
 TWILIO_SID = "ACb1491559fcc64c8db360351aa03c5358"
 TWILIO_AUTH = "4c326f27de0da951199d6c74df72263e"
 TWILIO_NUM = "16614909538"
+airlines = ['united', 'delta', 'southwest', 'alaskaAirline']
 
 @app.route('/add_flight', methods=['POST'])
 def add_flight():
@@ -48,9 +55,6 @@ def add_flight_departure_destination(username):
 
 @app.route('/test_check_flights')
 def check_flights_for_all_users():
-    # TODO: pull all users from DB and check flight for each destination
-    # store flight info in DB
-
     users_data = fire_base.get('/users', None)
     if users_data != None:
         for username in users_data:
@@ -61,7 +65,7 @@ def check_flights_for_all_users():
                 departing_airport, destination_airport = parse_location_destination(location_destination)
 
                 price, airline = get_flight_info(departing_airport, destination_airport,\
-                user_flight_info['arrival_date'], user_flight_info['departure_date'])
+                user_flight_info['departure_date'], user_flight_info['arrival_date'])
 
                 price = round(price * float(user_flight_info['num_passenger']), 2)
 
@@ -69,8 +73,8 @@ def check_flights_for_all_users():
                     + " at $" + str(price) + " for " + user_flight_info['num_passenger'] + " passengers! " \
                     + "Please book tickets on www." + str.lower(airline) + ".com"
 
-                # user_phone_number = user_data['phone_number']
-                send_text('+19516607238', sms_message)
+                user_phone_number = user_data['phone_number']
+                send_text(user_phone_number, sms_message)
 
 
     return render_template('homepage.html')
@@ -81,8 +85,31 @@ def parse_location_destination(location_destination):
 
 def get_flight_info(departure, destination, departure_date, arrival_date):
     # lowest price
-    price = 4.00
-    airline = "United"
+
+    #YYYY-MM-DD
+    #https://www.justfly.com/flight/search?campaign=10392&seg0_date=2018-04-28&seg0_time=&seg0_from=LAX&seg0_to=SMF&seg1_date=2018-05-06&seg1_time=&seg1_from=SMF&seg1_to=LAX&num_segments=2&num_adults=1&num_children=0&num_infants=0&preferred_carrier_code=&seat_class=&nearby_airports=0&flexible_date=0&no_penalties=0&non_stop=0
+
+    # url = "https://www.justfly.com/flight/search?campaign=10392&seg0_date=" + departure_date + "&seg0_time=&seg0_from=" + departure + "&seg0_to=" + destination + "seg1_date=" + arrival_date + "&seg1_time=&seg1_from=" + destination + "&seg1_to=" + departure + "&num_segments=2&num_adults=1&num_children=0&num_infants=0&preferred_carrier_code=&seat_class=&nearby_airports=0&flexible_date=0&no_penalties=0&non_stop=0"
+
+    # print(url)
+
+    # page = urllib.request.urlopen(url).read()
+    # soup = BeautifulSoup(page, "html.parser")
+    #
+    # items = soup.findAll("div", {"class": "Flights-Results-FlightResultsList"})
+    # print(items)
+    #
+    # print(soup.prettify())
+    #
+    # for item in soup.findAll("li", {"class": "fly-itinerary"}):
+    #     print('hi')
+    #     print(item)
+
+    x = randint(0, 4)
+    price = fire_base.get('/flights', departure + '-' + destination)
+
+    airline = airlines[x]
+
     return price, airline
 
 
@@ -90,10 +117,6 @@ def get_dashboard(username):
     # TODO: look up destinations in DB and display to user
 
     return render_template('dashboard.html', name=username)
-
-@app.route('/add_flight_test_client')
-def add_flight_test_client():
-    return render_template('test_client.html')
 
 @app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
