@@ -105,7 +105,7 @@ def get_dashboard(username):
     else:
         print("Error: User not found")
         abort(500)
-    return render_template('dashboard.html', flights=flights)
+    return render_template('dashboard.html', flights=flights, username=username)
 
 @app.route('/add_flight_test_client')
 def add_flight_test_client():
