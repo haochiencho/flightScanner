@@ -148,3 +148,22 @@ a{color:inherit;text-decoration:none}
 .foot-lnk{
 	text-align:center;
 }
+
+.jumbotron {
+  margin-bottom: 0px !important;
+}
+
+.navbar {
+  margin-bottom: 0px !important;
+}
+
+#outPopUp {
+  position: absolute;
+  width: 500px;
+  height: 200px;
+  z-index: 15;
+  top: 25%;
+  left: 40%;
+  visibility: hidden;
+  /*margin: -100px 0 0 -150px;*/
+}
