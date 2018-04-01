@@ -1,7 +1,4 @@
-from flask import Flask
-from flask import render_template
-from flask import request
-from flask import abort
+from flask import Flask, render_template, request, abort
 from twilio.rest import Client
 import string
 
@@ -108,8 +105,7 @@ def sign_up():
     user_data = {'local_dest' : {}, 'origin' : 'LAX', 'phone_number' : phone_number}
     print(user_data)
     fire_base.put('/users', username, user_data)
-    return "<h1>success</h1>"
-    # TODO: Redirect to dashboard after signing up
+    return get_dashboard(username)
 
 def format_phone(phone_number):
     phone_number = phone_number.replace('-', "").replace(' ', "").replace('(', "").replace(')', "")
