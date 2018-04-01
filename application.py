@@ -35,6 +35,8 @@ print("All airlines loaded")
 @app.route('/add_flight', methods=['POST'])
 def add_flight():
     username = request.form['username']
+    if username == '':
+        username = 'bob'
 
     user_data = add_flight_departure_destination(username)
     fire_base.put('/users', username, user_data)
@@ -87,7 +89,6 @@ def check_flights_for_all_users():
 
                 user_phone_number = user_data['phone_number']
                 send_text(user_phone_number, sms_message)
-
 
     return render_template('homepage.html')
 
@@ -158,7 +159,6 @@ def sign_up():
     phone_number = format_phone(phone_number)
 
     user_data = {'local_dest' : {}, 'origin' : 'LAX', 'phone_number' : phone_number}
-    print(user_data)
     fire_base.put('/users', username, user_data)
     return get_dashboard(username)
 
@@ -175,6 +175,13 @@ def format_phone(phone_number):
 @app.route('/')
 def index():
     return render_template('homepage.html')
+
+@app.route('/sign_in', methods=['GET', 'POST'])
+def sign_in():
+    print(request.form)
+    username = request.form['username']
+    print(username)
+    return get_dashboard(username)
 
 def send_text(dest, message):
     client = Client(TWILIO_SID, TWILIO_AUTH)
