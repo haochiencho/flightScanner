@@ -69,7 +69,7 @@
                     {% endfor %}
                     <tr>
                       <form action="/add_flight" method="POST">
-                      <input name="username" type="text" hidden value="{{ username }}">
+                      <td hidden><input name="username" type="text" value="{{ username }}"></td>
                       <td><input name="starting_airport" type="text"></td>
                       <td><input name="destination_airport" type="text"></td>
                       <td><input name="departure_date" type="text"></td>
