@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, abort
 from twilio.rest import Client
 import string
-from pyflights import PyFlight
 import urllib
 from bs4 import BeautifulSoup
 from random import *
