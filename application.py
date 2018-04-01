@@ -4,9 +4,11 @@ from flask import request
 app = Flask(__name__)
 from firebase import firebase
 
+fire_base = firebase.FirebaseApplication('https://flightscanner-baa11.firebaseio.com', authentication=None)
+
 @app.route('/add_flight', methods=['POST'])
 def add_flight():
-    fire_base = firebase.FirebaseApplication('https://flightscanner-baa11.firebaseio.com', authentication=None)
+    
     # TODO: update database with flight information
     # username in URL and remaining info in POST request
     username = request.form['username']
@@ -54,9 +56,19 @@ def test_client():
     return render_template('test_client.html')
 
 
-@app.route('/sign_up')
+@app.route('/sign_up', methods=['GET', 'POST'])
 def sign_up():
-    return None
+    if request.method == "GET":
+        return render_template("test_signup.html")
+    username = request.form['username']
+    password = request.form['password']
+    email = request.form['email']
+
+    user_data = {'local_dest' : {}, 'origin' : 'LAX'}
+
+    fire_base.put('/users', username, user_data)
+    return "<h1>success</h1>"
+    # TODO: Redirect to dashboard after signing up
 
 @app.route('/')
 def index():
