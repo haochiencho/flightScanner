@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import abort
 from twilio.rest import Client
 import string
 
@@ -102,13 +103,23 @@ def sign_up():
     username = request.form['username']
     password = request.form['password']
     phone_number = request.form['phone_number']
-    # TODO: check phone number here
+    phone_number = format_phone(phone_number)
 
     user_data = {'local_dest' : {}, 'origin' : 'LAX', 'phone_number' : phone_number}
-
+    print(user_data)
     fire_base.put('/users', username, user_data)
     return "<h1>success</h1>"
     # TODO: Redirect to dashboard after signing up
+
+def format_phone(phone_number):
+    phone_number = phone_number.replace('-', "").replace(' ', "").replace('(', "").replace(')', "")
+    for c in phone_number:
+        if not c.isdigit():
+            abort(400) # Abort with bad request error cod
+    if len(phone_number) != 10:
+        abort(400)
+    phone_number = '+1' + phone_number
+    return phone_number
 
 @app.route('/')
 def index():
