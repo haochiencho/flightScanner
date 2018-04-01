@@ -69,7 +69,7 @@ def sign_up():
         return render_template("test_signup.html")
     username = request.form['username']
     password = request.form['password']
-    email = request.form['email']
+    email = request.form['phone_number']
 
     user_data = {'local_dest' : {}, 'origin' : 'LAX'}
 
