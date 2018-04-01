@@ -65,7 +65,7 @@ def add_flight_departure_destination(username):
 
     return user_data
 
-@app.route('/test_check_flights')
+@app.route('/check_flights')
 def check_flights_for_all_users():
     users_data = fire_base.get('/users', None)
     if users_data != None:
