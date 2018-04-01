@@ -1,13 +1,14 @@
 console.log("is you running2.0");
+
 function initAutocomplete() {
     console.log("init auto completed called");
 
-    var map = new google.maps.Map(document.getElementById('user-map'), {
-        center: {lat: -33.8688, lng: 151.2195},
-        zoom: 13,
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 0, lng: 0},
+        zoom: 1,
         mapTypeId: 'roadmap'
     });
-    console.log("map boys ", map)
+    console.log("map zoom: ", map.zoom)
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
