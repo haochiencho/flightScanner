@@ -83,11 +83,29 @@ def get_flight_info(departure, destination, departure_date, arrival_date):
     airline = "United"
     return price, airline
 
+@app.route("/dash/<username>")
+def dash(username=None):
+    return get_dashboard(username)
 
 def get_dashboard(username):
     # TODO: look up destinations in DB and display to user
-
-    return render_template('dashboard.html', name=username)
+    users_data = fire_base.get('/users', None)
+    if users_data != None and username in users_data:
+        user = users_data[username]
+        flights = []
+        print(user)
+        if 'local_dest' not in user:
+            return render_template('dashboard.html')
+        for key in user['local_dest']:
+            flight = user['local_dest'][key]
+            departure, destination = key.split('-')
+            flight['departure'] = departure
+            flight['destination'] = destination
+            flights.append(flight)
+    else:
+        print("Error: User not found")
+        abort(500)
+    return render_template('dashboard.html', flights=flights)
 
 @app.route('/add_flight_test_client')
 def add_flight_test_client():
